@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>FSE Chatroom App</title>
+  <link rel="stylesheet" type="text/css" href="/static/chatwindow.css" />
+  <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+  </script>
+</head>
+
+<body onload="joinChatApp()">
+  <div class="split onlineUser">
+      <input class = "logout" type="submit" name="logout" value="X" onclick="logout()">
+      <h1>Online users</h1>
+      <hr>
+      <ul id="users">
+
+      </ul>
+  </div>
+ 
+  <div id="split chatwindows">
+        <ul id="messages">    
+        </ul>
+  </div>
+  <div>
+      <form action="/" method="POST" id="chatForm">
+        <input id="txt" type="text" autocomplete="off" autofocus="on" placeholder="type a message here..." ></textarea>
+        <input type="submit" name="send" value="Send">
+      </form>
+  </div>
+  
+  <script>
+      var name = "<%= name %>";
+      var you = "You"
+      var socket = io.connect('http://localhost:3000');
+      
+    // submit text message without reload/refresh the pages
+    $('form').submit(function (e) {
+      
+      e.preventDefault(); // prevents page reloading
+      socket.emit('send_message', $('#txt').val(), name);
+      $('#txt').val('');
+      return false;
+    });
+
+    socket.on('load_online_users', function(data){
+
+      
+      if(data.name!==name && document.getElementById(data.name) === null ){
+        $('#users').append($('<li style=" background:  rgb(254, 254, 254); text-align: center;" id="'+ data.name +
+          
+        '" <pre> <strong>' + data.realName + ' </strong> <br></pre></li>'));
+      }
+      
+    });
+
+    socket.on('someone_joined', function(data){
+
+      
+      
+      if(data.name!==name && document.getElementById(data.name) === null ){
+        $('#users').append($('<li style=" background:  rgb(254, 254, 254); text-align: center;" id="'+ data.name +
+          '" <pre> <strong>' + data.realName + ' </strong> <br></pre></li>'));
+      
+      }
+    });
+
+    socket.on('someone_disconnected', function(data){
+
+      var list = document.getElementById("users");
+      var user = document.getElementById(data.name);
+      
+      if (list.hasChildNodes()) {
+          list.removeChild(user);
+      }
+    });
+
+    // append the chat text message
+    socket.on('send_message', function (data, sendername) {
+        
+      if(sendername === name )
+        {
+          var formattedString = addSpaceToNameAndDate(you, data.time);
+          
+          $('#messages').append($('<li style="float: right; background:  rgb(128, 128, 128);"' + 
+          ' <pre> <strong>' + formattedString + ' </strong> <br>' +data.msg+ '</pre></li>' ));
+        }
+        else{
+          var formattedString = addSpaceToNameAndDate(data.realName,data.time);
+          
+          $('#messages').append($('<li style="float: left; background:  rgb(175, 175, 175);"' + 
+          ' <pre> <strong>' + formattedString + '</strong> <br>' +data.msg+ '</pre></li>' ));
+         
+        }
+        $('html, body, div').animate({ scrollTop: 100000 }, 800);
+      
+   });
+
+   // loading older messages from database
+   socket.on('load_older_message',function (data,sendername){
+      
+     
+      if(sendername === name )
+        {
+          var formattedString = addSpaceToNameAndDate(you, data.time);
+          
+          $('#messages').append($('<li style="float: right; background:  rgb(128, 128, 128);"' + 
+          ' <pre> <strong>' + formattedString + ' </strong> <br>' +data.msg+ '</pre></li>' ));
+        }
+        else{
+          var formattedString = addSpaceToNameAndDate(data.realName,data.time);
+          
+          $('#messages').append($('<li style="float: left; background:  rgb(175, 175, 175);"' + 
+          ' <pre> <strong>' + formattedString + '</strong> <br>' +data.msg+ '</pre></li>' ));
+         
+        }
+        $('html, body, div').animate({ scrollTop: 100000 }, 800);
+    })
+
+
+    function joinChatApp() {
+      var i;
+      socket.emit('i_m_joining', name);
+      for (i = 0; i < 10 ; i++) {
+        $('#messages').append($('<li style="visibility:hidden;">'));
+      }
+    }
+
+
+    function logout(){
+      
+      socket.emit('i_m_disconnecting', name);
+      socket.disconnect(name);
+
+      window.location.replace("/");
+    }
+    function addSpaceToNameAndDate(name,date){
+      var formattedString="";
+      formattedString = formattedString.concat(name);
+      formattedString = formattedString.concat(' :');
+      for (i = 0; i < 60 - name.length ; i++){
+        formattedString = formattedString.concat('&nbsp; ');
+      }
+      formattedString = formattedString.concat(date);
+      return formattedString;
+    }
+    
+  </script>
+</body>
+
+</html>

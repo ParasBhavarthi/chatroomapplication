@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title> FSE Chatroom App</title>
+		<link rel="stylesheet" type="text/css" href="/static/forms.css"/>
+		
+	</head>
+	<body>
+		<div class="form">
+			<h1>Login Form</h1>
+			<form action="authenticate" method="POST">
+				<input id="username" type="text" name="username" placeholder="Username" required>
+				<input type="password" name="password" placeholder="Password" required>
+				<p id ="authentication">invalid username or password</p>
+				<input type="submit" name="login" value="Login" onclick="store()">				
+				<p class ="message">New User?<a href="signup">Sign-up</a></p>
+			</form>
+		</div>
+		<script>
+
+			function store(){
+				var input = document.getElementById('username').innerHTML;	
+			    localStorage.setItem("userName", input);
+			} 
+			console.log(localStorage);
+			var isAuthenticationUnsuccessful = "<%= isAuthenticationUnsuccessful %>";
+			var x = document.getElementById("authentication");
+			if(isAuthenticationUnsuccessful === "true"){	
+						
+				x.style.display = "block";
+			}
+			else{
+				x.style.display = "none";
+				
+			}	
+		</script>
+	
+	</body>
+</html>

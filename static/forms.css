@@ -1,0 +1,43 @@
+form {
+    text-align: center;
+    width: 300px;
+    margin: 0 auto;
+    font-family: Tahoma, 
+    Geneva, sans-serif;
+    
+}
+.form h1 {
+    
+    color: #4d4d4d;
+    font-size: 24px;
+    padding: 20px 0 20px 0;
+    text-align: center;
+    text-transform: uppercase;
+}
+.form input[type="password"],
+.form input[type="text"] {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #dddddd;
+    margin-bottom: 15px;
+    box-sizing:border-box;
+    border-radius: 10px;
+}
+
+#authentication {
+    
+    padding: 5px;
+    
+  }
+
+.form input[type="submit"] {
+    width: 100%;
+    padding: 15px;
+    background-color: #535b63;
+    border: 0;
+    box-sizing: border-box;
+    cursor: pointer;
+    font-weight: bold;
+    color: #ffffff;
+    border-radius: 10px;
+}

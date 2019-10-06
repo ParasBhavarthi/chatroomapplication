@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Sign up Form</title>
+        <link rel="stylesheet" type="text/css" href="/static/forms.css"/>
+    </head>
+
+    <body>
+		<div class="form">
+			<h1>Sign up Form</h1>
+			<form action="register" method="POST">
+                <input type="text" name="username" placeholder="Username" required>
+                <input type="text" name="name" placeholder="Name" required>
+                <input type="password" name="password" placeholder="Password" required>
+                <p id ="usernameExist">This username already exist. <br> Please try different username</p>
+                <input type="submit" name="login" value="Sign Up">
+                
+			</form>
+        </div>
+        
+        <script>
+
+                var isUsernameExist = "<%= isUsernameExist %>";
+                console.log(isUsernameExist)
+                var x = document.getElementById("usernameExist");
+                console.log(x);
+                if(isUsernameExist === "true"){	
+                    console.log("inside if ")		
+                    x.style.display = "block";
+                }
+                else{
+                    x.style.display = "none";
+                }	
+            </script>
+
+	</body>
+</html>
